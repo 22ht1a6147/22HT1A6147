@@ -1,7 +1,6 @@
 /**
  * Shared logging middleware
  * Assigns a requestId, logs request/response info in structured JSON
- * DO NOT use console.log in final exam code.
  */
 
 module.exports = function loggingMiddleware(req, res, next) {
@@ -13,18 +12,24 @@ module.exports = function loggingMiddleware(req, res, next) {
   const start = Date.now();
 
   res.on('finish', () => {
-    const logEntry = {
-      level: 'info',
-      requestId: req.requestId,
-      method: req.method,
-      path: req.originalUrl,
-      status: res.statusCode,
-      durationMs: Date.now() - start,
-      timestamp: new Date().toISOString(),
-    };
+    try {
+      const logEntry = {
+        level: 'info',
+        requestId: req.requestId,
+        method: req.method,
+        path: req.originalUrl,
+        status: res.statusCode,
+        durationMs: Date.now() - start,
+        timestamp: new Date().toISOString(),
+      };
 
-    // Output structured log
-    process.stdout.write(JSON.stringify(logEntry) + '\n');
+      // Output structured log
+      process.stdout.write(JSON.stringify(logEntry) + '\n');
+    } catch (err) {
+      process.stderr.write(
+        JSON.stringify({ level: 'error', message: 'Logging failed', error: err.message }) + '\n'
+      );
+    }
   });
 
   next();

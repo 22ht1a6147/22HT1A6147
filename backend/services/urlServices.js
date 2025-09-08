@@ -1,57 +1,74 @@
-const storeModel = require('../models/store');
-const shortcodeUtils = require('../utils/shortcode');
+const store = require('../models/store');
 const config = require('../config/config');
 
-async function createShortUrl({ url, validityMinutes, desiredShortcode }) {
-  let shortcode = desiredShortcode || shortcodeUtils.generateUniqueShortcode(storeModel.all());
+/**
+ * Generate a random shortcode
+ */
+function generateRandomShortcode(length = config.GENERATED_SHORTCODE_LENGTH) {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for (let i = 0; i < length; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+}
 
-  if (storeModel.exists(shortcode)) {
-    throw new Error('Shortcode already exists');
+/**
+ * Create a new short URL entry
+ */
+async function createShortUrl({ url, validityMinutes, desiredShortcode }) {
+  let shortcode = desiredShortcode || generateRandomShortcode();
+
+  // Ensure shortcode is unique
+  while (store.exists(shortcode)) {
+    shortcode = generateRandomShortcode();
   }
 
-  const now = new Date();
-  const expiryAt = new Date(now.getTime() + validityMinutes * 60 * 1000);
-
+  const expiryAt = new Date(Date.now() + validityMinutes * 60 * 1000).toISOString();
   const entry = {
-    shortcode,
     originalUrl: url,
-    createdAt: now,
+    createdAt: new Date().toISOString(),
     expiryAt,
-    totalClicks: 0,
-    clickEvents: []
+    clicks: 0
   };
 
-  storeModel.create(shortcode, entry, true);
+  store.create(shortcode, entry, true);
 
   return {
-    shortLink: `${config.BASE_URL}/${shortcode}`,
-    expiry: expiryAt
+    shortcode,
+    shortUrl: `${config.BASE_URL}/${shortcode}`,
+    expiryAt
   };
 }
 
+/**
+ * Get statistics for a shortcode
+ */
 async function getStats(shortcode) {
-  return storeModel.get(shortcode);
+  const entry = store.get(shortcode);
+  return entry ? { ...entry } : null;
 }
 
-async function handleRedirect(shortcode, req) {
-  const entry = storeModel.get(shortcode);
+/**
+ * Handle redirect for a shortcode
+ */
+async function handleRedirect(shortcode) {
+  const entry = store.get(shortcode);
   if (!entry) return null;
 
   const now = new Date();
-  if (now > new Date(entry.expiryAt)) {
+  if (new Date(entry.expiryAt) < now) {
     return { status: 'expired', expiryAt: entry.expiryAt };
   }
 
-  entry.totalClicks += 1;
-  entry.clickEvents.push({
-    timestamp: now,
-    referrer: req.get('referer') || null,
-    userAgent: req.get('user-agent') || null
-  });
-
-  storeModel.update(shortcode, entry, true);
+  entry.clicks = (entry.clicks || 0) + 1;
+  store.update(shortcode, entry, true);
 
   return { status: 'ok', originalUrl: entry.originalUrl };
 }
 
-module.exports = { createShortUrl, getStats, handleRedirect };
+module.exports = {
+  createShortUrl,
+  getStats,
+  handleRedirect
+};

@@ -145,3 +145,25 @@ Default short link validity: 30 minutes.
 
 Maximum 5 concurrent URLs can be shortened from the frontend.
 
+For backend
+# Go to backend folder
+cd "C:\Users\VENKATSAI\Desktop\FULL STACK PROJECT\url-shortener-microservice\backend"
+
+# Install dependencies (only first time)
+npm install
+
+# Start backend server
+node server.js  or  npm run dev
+
+
+for frontend
+# Go to frontend folder
+
+cd "C:\Users\VENKATSAI\Desktop\FULL STACK PROJECT\url-shortener-microservice\frontend"
+# Install dependencies (only first time)
+npm install
+
+# Start React app
+npm start
+
+

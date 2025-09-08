@@ -1,10 +1,5 @@
-/**
- * Controllers orchestrate request -> validation -> service calls -> response
- */
-
 const validators = require('../utils/validators');
-const timeUtils = require('../utils/time');
-const urlService = require('../services/urlServices'); // ✅ correct path
+const urlService = require('../services/urlServices');
 const config = require('../config/config');
 
 function sendError(res, status, message, details) {

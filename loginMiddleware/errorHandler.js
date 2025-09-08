@@ -10,11 +10,11 @@ function errorHandler(err, req, res, next) {
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
     method: req.method,
     path: req.originalUrl,
-    requestId: req.requestId,
+    requestId: req.requestId || 'N/A',
     timestamp: new Date().toISOString(),
   };
 
-  // Write error log to stderr
+  // Write error log to stderr in structured JSON
   process.stderr.write(JSON.stringify(logMessage) + '\n');
 
   // Send safe JSON response
@@ -22,6 +22,9 @@ function errorHandler(err, req, res, next) {
     success: false,
     error: err.message || 'Something went wrong',
   });
+
+  // Call next if needed (Express requires this in some cases)
+  if (next) next();
 }
 
 module.exports = errorHandler;

@@ -2,5 +2,6 @@
   "name": "affordmed-logging",
   "version": "1.0.0",
   "main": "loggingMiddleware.js",
-  "license": "MIT"
+  "license": "MIT",
+  "type": "commonjs"
 }

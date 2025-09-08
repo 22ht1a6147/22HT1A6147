@@ -1,7 +1,3 @@
-/**
- * Time helpers for expiry calculations and comparisons
- */
-
 function getExpiryIso(minutesFromNow) {
   const d = new Date(Date.now() + minutesFromNow * 60 * 1000);
   return d.toISOString();

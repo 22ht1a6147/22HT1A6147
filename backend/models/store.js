@@ -1,7 +1,3 @@
-/**
- * In-memory store model with optional persistence
- */
-
 const fs = require('fs');
 const path = require('path');
 const DATA_PATH = path.join(__dirname, '..', 'data', 'store.json');
@@ -23,7 +19,7 @@ function persistToDisk() {
   try {
     fs.writeFileSync(DATA_PATH, JSON.stringify(store, null, 2), 'utf8');
   } catch (err) {
-    // ignore in exam project
+    // ignore
   }
 }
 

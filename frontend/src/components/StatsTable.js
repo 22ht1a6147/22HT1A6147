@@ -3,8 +3,6 @@ import React from 'react';
 /**
  * Displays click events for a short URL
  * items: array of { shortcode, originalUrl, createdAt, expiryAt, totalClicks, clickEvents }
- *
- * TODO: implement
  */
 
 export default function StatsTable({ items }) {
@@ -17,27 +15,31 @@ export default function StatsTable({ items }) {
       {items.map((it) => (
         <div key={it.shortcode} style={{ border: '1px solid #ddd', padding: 8, marginBottom: 8 }}>
           <h4>{it.shortcode}</h4>
-          <div>Original: {it.originalUrl}</div>
-          <div>Created: {it.createdAt}</div>
-          <div>Expiry: {it.expiryAt}</div>
-          <div>Total clicks: {it.totalClicks}</div>
+          <div>Original: <a href={it.originalUrl} target="_blank" rel="noreferrer">{it.originalUrl}</a></div>
+          <div>Created: {it.createdAt || '—'}</div>
+          <div>Expiry: {it.expiryAt || it.expiry || '—'}</div>
+          <div>Total clicks: {it.totalClicks ?? (it.clicks ?? 0)}</div>
 
-          <table style={{ width: '100%', marginTop: 8 }}>
+          <table style={{ width: '100%', marginTop: 8, borderCollapse: 'collapse' }}>
             <thead>
               <tr>
-                <th>Timestamp</th>
-                <th>Referrer</th>
-                <th>Geo</th>
+                <th style={{ borderBottom: '1px solid #ccc', textAlign: 'left', padding: 6 }}>Timestamp</th>
+                <th style={{ borderBottom: '1px solid #ccc', textAlign: 'left', padding: 6 }}>Referrer</th>
+                <th style={{ borderBottom: '1px solid #ccc', textAlign: 'left', padding: 6 }}>Geo</th>
               </tr>
             </thead>
             <tbody>
-              {it.clickEvents && it.clickEvents.map((e, idx) => (
+              {it.clickEvents && it.clickEvents.length > 0 ? it.clickEvents.map((e, idx) => (
                 <tr key={idx}>
-                  <td>{e.timestamp}</td>
-                  <td>{e.referrer}</td>
-                  <td>{e.geo}</td>
+                  <td style={{ padding: 6 }}>{e.timestamp}</td>
+                  <td style={{ padding: 6 }}>{e.referrer || '—'}</td>
+                  <td style={{ padding: 6 }}>{e.geo || '—'}</td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td style={{ padding: 6 }} colSpan="3">No click events recorded.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

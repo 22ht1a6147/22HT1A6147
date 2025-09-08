@@ -1,1 +1,32 @@
-{}
+{
+  "myLink123": {
+    "originalUrl": "https://chat.openai.com",
+    "createdAt": "2025-09-08T01:59:34.963Z",
+    "expiryAt": "2025-09-08T02:29:34.963Z",
+    "clicks": 0
+  },
+  "WYfy4a": {
+    "originalUrl": "https://chat.openai.com",
+    "createdAt": "2025-09-08T02:02:33.036Z",
+    "expiryAt": "2025-09-08T02:32:33.036Z",
+    "clicks": 1
+  },
+  "QWErt": {
+    "originalUrl": "https://openai.com/index/chatgpt/",
+    "createdAt": "2025-09-08T02:06:29.244Z",
+    "expiryAt": "2025-09-08T02:36:29.244Z",
+    "clicks": 1
+  },
+  "ASDFg": {
+    "originalUrl": "https://openai.com/index/chatgpt/",
+    "createdAt": "2025-09-08T02:09:11.427Z",
+    "expiryAt": "2025-09-08T02:39:11.427Z",
+    "clicks": 1
+  },
+  "qwertyu": {
+    "originalUrl": "https://openai.com/index/chatgpt/",
+    "createdAt": "2025-09-08T02:10:06.651Z",
+    "expiryAt": "2025-09-08T02:40:06.651Z",
+    "clicks": 1
+  }
+}
